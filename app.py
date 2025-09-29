@@ -1,0 +1,33 @@
+import streamlit as st
+import pandas as pd
+import joblib
+import lightgbm as lgb
+from geopy.distance import geodesic
+
+model = joblib.load("./fraud_detection_model.jb")
+encoder = joblib.load("./label_encoder.jb")
+
+def haversine(lat1,lon1,lat2,lon2):
+    return geodesic((lat1,lon1),(lat2,lon2)).km
+
+st.title = ("Fraud Detection System")
+st.write = ("Enter the Transaction Details below")
+
+merchant = st.text_input("Merchant Name")
+category = st.text_input ("Category")
+amt = st.number_input("Transaction Amount", min_value=0.0, format="%.2f")
+lat = st.number_input("Latitude", format="%.6f")
+long = st.number_input("Longitude", format="%. 6f")
+merch_lat = st.number_input("Merchant Latitude", format="%. 6f")
+merch_long = st.number_input("Merchant Longitude", format="%. 6f")
+hour = st.slider("Transaction Hour", 0,23,12)
+day =st. slider("Transaction Day", 1,31,15)
+month = st.slider("Transaction Month", 1,12,6)
+gender = st.selectbox("Gender", ["Male", "Female"])
+cc_num = st. text_input ("Credit Card number")
+
+distance = haversine(lat, long,merch_lat, merch_long)
+
+if st.button("Check for Fraud"):
+    if merchant and category and cc_num:
+        input_data = pd([['merchant', 'category', 'amt', 'cc_num', 'hour', 'day', 'month', 'year', 'gender', 'distance']])
