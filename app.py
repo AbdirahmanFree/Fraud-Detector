@@ -17,9 +17,9 @@ merchant = st.text_input("Merchant Name")
 category = st.text_input ("Category")
 amt = st.number_input("Transaction Amount", min_value=0.0, format="%.2f")
 lat = st.number_input("Latitude", format="%.6f")
-long = st.number_input("Longitude", format="%. 6f")
-merch_lat = st.number_input("Merchant Latitude", format="%. 6f")
-merch_long = st.number_input("Merchant Longitude", format="%. 6f")
+long = st.number_input("Longitude", format="%.6f")
+merch_lat = st.number_input("Merchant Latitude", format="%.6f")
+merch_long = st.number_input("Merchant Longitude", format="%.6f")
 hour = st.slider("Transaction Hour", 0,23,12)
 day =st. slider("Transaction Day", 1,31,15)
 month = st.slider("Transaction Month", 1,12,6)
@@ -39,5 +39,14 @@ if st.button("Check for Fraud"):
                 input_data[col] = encoder[col].transfrom(input_data[col])
             except ValueError:
                 input_data[col] =-1
+        
+        
+        input_data['cc_num'] = input_data['cc_num'].apply(lambda x:hash(x) % (10 ** 2))
+        prediction = model.predict(input_data)[0]
+        result = "Fraudulant Transaction" if prediction == 1 else "Legitimate Transaction"
+        st. subheader (f"Prediction: {result})")
+    else:
+        st.error("Please Fill all required fields")
+
             
 
