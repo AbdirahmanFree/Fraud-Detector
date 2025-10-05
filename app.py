@@ -30,4 +30,14 @@ distance = haversine(lat, long,merch_lat, merch_long)
 
 if st.button("Check for Fraud"):
     if merchant and category and cc_num:
-        input_data = pd([['merchant', 'category', 'amt', 'cc_num', 'hour', 'day', 'month', 'year', 'gender', 'distance']])
+        input_data = pd([['merchant', 'category', 'amt', 'cc_num', 'hour', 'day', 'month', 'year', 'gender', 'distance']],
+                        columns=['merchant', 'category', 'amt', 'cc_num', 'hour', 'day', 'month', 'year', 'gender', 'distance'])
+        
+        categorical_col = ['merchant', 'category', 'gender']
+        for col in categorical_col:
+            try:
+                input_data[col] = encoder[col].transfrom(input_data[col])
+            except ValueError:
+                input_data[col] =-1
+            
+
